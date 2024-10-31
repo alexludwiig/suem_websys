@@ -1,30 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 
-export default function Home() {
+export default function Login() {
   const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
-
-  useEffect(() => {
-    // Check if user is already authenticated
-    fetch('/api/auth/check')
-      .then(res => res.json())
-      .then(data => {
-        if (data.authenticated) {
-          router.push('/dashboard')
-        } else {
-          setIsLoading(false)
-        }
-      })
-      .catch(() => {
-        setIsLoading(false)
-      })
-  }, [router])
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -52,26 +34,24 @@ export default function Home() {
     }
   }
 
-  if (isLoading) {
-    return <div className="flex h-screen items-center justify-center">Cargando...</div>
-  }
-
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="h-16 bg-[#8BC34A] flex items-center justify-center">
-        <Image
-          src="/suemlogowhite.png"
-          alt="SUEM Logo"
-          width={100}
-          height={40}
-          className="h-10 w-auto"
-        />
+      <div className="h-16 bg-[#8BC34A]">
+        <div className="mx-auto max-w-7xl px-4">
+          <Image
+            src="/placeholder.svg"
+            alt="SUEM Logo"
+            width={100}
+            height={40}
+            className="h-16 w-auto py-3"
+          />
+        </div>
       </div>
       <div className="mx-auto max-w-md px-4 py-8">
         <div className="rounded-lg bg-white p-8 shadow-lg">
           <div className="mb-8 text-center">
             <Image
-              src="/suemlogotransparent.png"
+              src="/placeholder.svg"
               alt="SUEM Logo"
               width={150}
               height={60}
@@ -115,13 +95,8 @@ export default function Home() {
               INGRESAR
             </button>
           </form>
-          <div className="mt-4 text-center">
-            <Link href="/register" className="text-sm text-[#6B8E23] hover:underline">
-              Registrarse
-            </Link>
-          </div>
           <p className="mt-8 text-center text-xs text-gray-500">
-            Snake Software, 2024.
+            Snalo Software 2024
           </p>
         </div>
       </div>

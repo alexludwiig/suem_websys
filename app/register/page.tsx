@@ -1,30 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-export default function Home() {
+export default function Register() {
   const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
-
-  useEffect(() => {
-    // Check if user is already authenticated
-    fetch('/api/auth/check')
-      .then(res => res.json())
-      .then(data => {
-        if (data.authenticated) {
-          router.push('/dashboard')
-        } else {
-          setIsLoading(false)
-        }
-      })
-      .catch(() => {
-        setIsLoading(false)
-      })
-  }, [router])
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -33,9 +16,15 @@ export default function Home() {
     const formData = new FormData(event.currentTarget)
     const email = formData.get('email')
     const password = formData.get('password')
+    const confirmPassword = formData.get('confirmPassword')
+
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden')
+      return
+    }
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -43,17 +32,13 @@ export default function Home() {
 
       if (!response.ok) {
         const data = await response.json()
-        throw new Error(data.error || 'Error al iniciar sesión')
+        throw new Error(data.error || 'Error al registrar usuario')
       }
 
-      router.push('/dashboard')
+      router.push('/')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al iniciar sesión')
+      setError(err instanceof Error ? err.message : 'Error al registrar usuario')
     }
-  }
-
-  if (isLoading) {
-    return <div className="flex h-screen items-center justify-center">Cargando...</div>
   }
 
   return (
@@ -77,11 +62,12 @@ export default function Home() {
               height={60}
               className="mx-auto mb-6"
             />
+            <h2 className="text-2xl font-bold text-gray-900">Registrar mi usuario</h2>
           </div>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Usuario:
+                Email:
               </label>
               <input
                 id="email"
@@ -103,6 +89,18 @@ export default function Home() {
                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#8BC34A] focus:outline-none focus:ring-[#8BC34A]"
               />
             </div>
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                Confirmar Contraseña:
+              </label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                required
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#8BC34A] focus:outline-none focus:ring-[#8BC34A]"
+              />
+            </div>
             {error && (
               <div className="rounded-md bg-red-50 p-4 text-sm text-red-500">
                 {error}
@@ -112,12 +110,12 @@ export default function Home() {
               type="submit"
               className="w-full rounded-md bg-[#6B8E23] px-4 py-2 text-white hover:bg-[#556B2F] focus:outline-none focus:ring-2 focus:ring-[#8BC34A] focus:ring-offset-2"
             >
-              INGRESAR
+              REGISTRARSE
             </button>
           </form>
           <div className="mt-4 text-center">
-            <Link href="/register" className="text-sm text-[#6B8E23] hover:underline">
-              Registrarse
+            <Link href="/" className="text-sm text-[#6B8E23] hover:underline">
+              Volver al inicio de sesión.
             </Link>
           </div>
           <p className="mt-8 text-center text-xs text-gray-500">
