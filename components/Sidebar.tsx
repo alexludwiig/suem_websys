@@ -35,12 +35,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           Configuración de Perfil
         </Link>
         <Link
-          href="#"
-          className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
-        >
-          <LogOut className="mr-3" size={20} />
-          Cerrar Sesión
-        </Link>
+              href="/api/auth/logout"
+              className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+            >
+              <LogOut className="mr-3" size={20} />
+              Cerrar Sesión
+            </Link>
       </nav>
     </div>
   )
